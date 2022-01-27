@@ -153,10 +153,10 @@ def list_add(res_list, severity, name):
         res_list[2] += 1
     elif 7 <= severity <= 10:
         res_list[1] += 1
-    if res_list[4] < 100:
+    if res_list[4] < 10:
         res_list[4] += (severity ** 4) / 1000
-    if res_list[4] > 100:
-        res_list[4] = 100
+    if res_list[4] > 10:
+        res_list[4] = 10
     res_list[5].append(name)
     return res_list
 
