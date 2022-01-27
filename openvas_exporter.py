@@ -125,7 +125,11 @@ def get_result_hosts(results_xml: Element):
     # ['Hostname', 'high', 'medium', 'low', 'index', [names]]
     for result in results_list:
         ip = result.xpath('host/text()')[0]
-        hostname = result.xpath('host/hostname/text()')[0]
+        hostname = result.xpath('host/hostname/text()')
+        if len(hostname) > 0:
+            hostname = str(hostname[0])
+        else:
+            hostname = ""
         severity = float(result.xpath('severity/text()')[0])
         name = result.xpath('name/text()')[0]
         if ip in table_data:
