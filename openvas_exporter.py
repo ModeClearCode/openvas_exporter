@@ -64,13 +64,14 @@ class OpenvasCollector:
             with Gmp(self.conn, transform=transform) as self.gmp:
                 self.gmp.authenticate(args.login, args.openvas_pass)
         except GvmError as e:
-            logger.error(f'Connection is failed. Details: {e}')
+            logger.error(f'Connection is failed.')
+            logger.debug(f'Details: {e}')
             exit(1)
 
     def collect(self):
         now = datetime.datetime.now()
         if self.to_date == date(now.year, now.month, now.day):
-            logger.debug(f'Refreshing date...')
+            logger.info(f'Refreshing date...')
             self.to_date = date(now.year, now.month, now.day) + timedelta(days=1)
             self.from_date = self.to_date - timedelta(days=self.time_interval)
         metrics_total = {
@@ -143,9 +144,7 @@ class OpenvasCollector:
                 f'Summary of results from {self.from_date.isoformat()} '
                 f'to {(self.to_date - timedelta(days=1)).isoformat()}'
             )
-            logger.info(f'High: {int(sum_high)}')
-            logger.info(f'Medium: {int(sum_medium)}')
-            logger.info(f'Low: {int(sum_low)}')
+            logger.info(f'High: {int(sum_high)}, Medium: {int(sum_medium)}, Low: {int(sum_low)}')
             for key in result_sums:
                 metrics_total[key].add_metric([self.server_ip], result_sums[key])
                 yield metrics_total[key]
@@ -162,8 +161,8 @@ class OpenvasCollector:
             if self.i == 4:
                 logger.error('Cannot connect after 3 retries. Quitting...')
                 exit(1)
-            logger.warning(f'Caught exception! Connection # {self.i} was corrupted. Details: {e}\n'
-                           f'Trying to reconnect...')
+            logger.warning(f'Caught exception! Connection # {self.i} was corrupted. Trying to reconnect...')
+            logger.debug(f'Details: {e}')
             self.__init__(self.args, self.i + 1)
             self.get_results_xml()
         else:
