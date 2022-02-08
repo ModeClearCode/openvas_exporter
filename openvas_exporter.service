@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus exporter for OpenVAS
+Wants=network-online.target
+After=network-online.target
+[Service]
+WorkingDirectory=/opt/openvas_exporter/
+EnvironmentFile=/opt/openvas_exporter/openvas_exporter.env
+ExecStart=/usr/local/bin/openvas_exporter
+Restart=always
+[Install]
+WantedBy=multi-user.target
