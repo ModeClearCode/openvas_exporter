@@ -3,6 +3,7 @@ import os
 import argparse
 import logging
 from datetime import date, timedelta
+from sys import exit
 import time
 from statistics import mean
 from lxml.etree import Element
@@ -159,8 +160,10 @@ class OpenvasCollector:
             results = self.gmp.get_results(filter_string=report_filter)
         except (GvmError, BrokenPipeError, OSError) as e:
             if self.i == 4:
-                logger.error('Cannot connect after 3 retries. Quitting...')
-                exit(1)
+                logger.error(f'Cannot connect after 3 retries. Trying to reconnect after {self.args.scr_interval}s.')
+            if self.i > 3:
+
+                time.sleep(self.args.scr_interval)
             logger.warning(f'Caught exception! Connection # {self.i} was corrupted. Trying to reconnect...')
             logger.debug(f'Details: {e}')
             self.__init__(self.args, self.i + 1)
@@ -347,7 +350,7 @@ def main():
         start_http_server(args.port)
         REGISTRY.register(OpenvasCollector(args, 1))
         while True:
-            time.sleep(args.scr_interval)
+            time.sleep(1)
     except KeyboardInterrupt:
         print("\nQuitting...")
         exit(0)
