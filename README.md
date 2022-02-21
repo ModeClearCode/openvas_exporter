@@ -38,8 +38,8 @@ Environment | Flag | Descripton | Default |
 OPENVAS_CONN_TYPE | '-c', '--connection' | OpenVAS connection type to use by exporter. Options: ssh or tls. | ssh
 OPENVAS_EXPORTER_PORT | '-p', '--port' | Listen to this port. | 9111
 OPENVAS_EXPORTER_DEBUG | '-d', '--debug' | Enable debug output. | False
-OPENVAS_TIME_INTERVAL | '-t', '--time-interval' | Exporter generates metrics from reports for a certain interval of days. Scan time interval, in days. | 14
-OPENVAS_EXPORTER_INTERVAL | '-si', '--scrape-interval' | Scrape interval time, when connection is lost, in seconds. | 10
+OPENVAS_TIME_INTERVAL | '-ti', '--time-interval' | Exporter generates metrics from reports for a certain interval of days. Scan time interval, in days. | 14
+OPENVAS_TIMEOUT | '-t ', '--timeout' | Timeout interval after connection loss, also multiplied by 10 for the first connection, in seconds. | 10
 OPENVAS_HOSTNAME | '-o', '--hostname' | DNS name or IP address of the remote OpenVAS server |
 OPENVAS_USER | '-l', '--login' | Login for GSA |
 OPENVAS_PASSWORD | '-os', '--openvas-secret' | Password for GSA |
