@@ -1,5 +1,5 @@
 # OpenVAS exporter
-OpenVAS exporter for prometheus.
+OpenVAS (also known as GSM) exporter for prometheus.
 Supports SSH and TLS (not tested) connections. Tested with GVM Version 21.4.3, another versions not tested, so, there is no guarantee that the exporter will work.
 ## Usage and preparations
 There is 2 variation of use exporter: compiled package with dependencies (download in releases) or pure python script from sources, but need to install dependencies.
@@ -36,7 +36,7 @@ _Group can be **gvm** and another path to socket file, depends on your GVM insta
 Environment | Flag | Descripton | Default |
 ------------|------|------------|---------|
 OPENVAS_CONN_TYPE | '-c', '--connection' | OpenVAS connection type to use by exporter. Options: ssh or tls. | ssh
-OPENVAS_EXPORTER_PORT | '-p', '--port' | Listen to this port. | 9111
+OPENVAS_EXPORTER_PORT | '-p', '--port' | Listen to this port. | 9966
 OPENVAS_EXPORTER_DEBUG | '-d', '--debug' | Enable debug output. | False
 OPENVAS_TIME_INTERVAL | '-ti', '--time-interval' | Exporter generates metrics from reports for a certain interval of days. Scan time interval, in days. | 14
 OPENVAS_TIMEOUT | '-t ', '--timeout' | Timeout interval after connection loss, also multiplied by 10 for the first connection, in seconds. | 10
