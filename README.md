@@ -54,6 +54,8 @@ OPENVAS_TLS_PORT | '-tp', '--tls-port' | Port for tls on OpenVAS server. Require
 
 Use example of systemd unit __openvas_exporter.service__ and envoroment's file __openvas_exporter.env__ for planned work in system.
 
-
+## Grafana
+You can use prepared grafana dashboard for this exporter.
+![Grafana dashboard for OpenVAS exporter](/grafana/dash.jpg) 
 
 
