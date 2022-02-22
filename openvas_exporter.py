@@ -65,9 +65,12 @@ class OpenvasCollector:
             with Gmp(self.conn, transform=transform) as self.gmp:
                 self.gmp.authenticate(args.login, args.openvas_pass)
         except GvmError as e:
-            logger.error(f'Connection is failed.')
+            logger.error(f'Connection is failed. Check if address is correct! Exporter will try to connect after '
+                         f'{10*self.args.to_interval}s.')
             logger.debug(f'Details: {e}')
-            exit(1)
+            time.sleep(10*self.args.to_interval)
+            logger.info('Last try to connect was unsuccessful. Trying again...')
+            self.__init__(self.args, 1)
 
     def collect(self):
         now = datetime.datetime.now()
@@ -160,10 +163,9 @@ class OpenvasCollector:
             results = self.gmp.get_results(filter_string=report_filter)
         except (GvmError, BrokenPipeError, OSError) as e:
             if self.i == 4:
-                logger.error(f'Cannot connect after 3 retries. Trying to reconnect after {self.args.scr_interval}s.')
+                logger.error(f'Cannot connect after 3 retries. Trying to reconnect after {self.args.to_interval}s.')
             if self.i > 3:
-
-                time.sleep(self.args.scr_interval)
+                time.sleep(self.args.to_interval)
             logger.warning(f'Caught exception! Connection # {self.i} was corrupted. Trying to reconnect...')
             logger.debug(f'Details: {e}')
             self.__init__(self.args, self.i + 1)
@@ -305,15 +307,16 @@ def parse_args():
         default=os.environ.get('OPENVAS_PASSWORD')
     )
     parser.add_argument(
-        '-si', '--scrape-interval',
-        dest='scr_interval',
+        '-t', '--timeout',
+        dest='to_interval',
         required=False,
         type=int,
-        help='Scrape interval time, in seconds. Default = 10 sec',
-        default=os.environ.get('OPENVAS_EXPORTER_INTERVAL', '10')
+        help='Timeout interval after connection loss, also multiplied by 10 for the first connection, in seconds.'
+             ' Default = 10 sec',
+        default=os.environ.get('OPENVAS_TIMEOUT_INTERVAL', '10')
     )
     parser.add_argument(
-        '-t', '--time-interval',
+        '-ti', '--time-interval',
         dest='time_interval',
         required=False,
         type=int,
