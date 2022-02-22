@@ -287,8 +287,8 @@ def parse_args():
         dest='port',
         required=False,
         type=int,
-        help='Listen to this port. Default = 9111',
-        default=int(os.environ.get('OPENVAS_EXPORTER_PORT', '9111'))
+        help='Listen to this port. Default = 9966',
+        default=int(os.environ.get('OPENVAS_EXPORTER_PORT', '9966'))
     )
     parser.add_argument(
         '-l', '--login',
