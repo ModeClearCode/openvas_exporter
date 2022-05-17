@@ -33,38 +33,38 @@ class OpenvasCollector:
         self.server_ip = args.host
 
         # Create connection
-        if args.connection.lower() == 'ssh':
-            if args.user is None:
-                logger.error('User for ssh on OpenVAS server is not set.')
-                exit(1)
-            self.conn = SSHConnection(
-                hostname=args.host,
-                username=args.user,
-                password=args.ssh_pass,
-                port=args.ssh_port,
-                timeout=30
-            )
-        elif args.connection.lower() == 'tls':
-            if args.cert_file is None or args.ca_file is None or args.private_key is None:
-                logger.error('Parameters for tls-connection on OpenVAS server is not set.')
-                exit(1)
-            self.conn = TLSConnection(
-                hostname=args.host,
-                certfile=args.cert_file,
-                cafile=args.ca_file,
-                keyfile=args.private_key,
-                password=args.pass_key,
-                port=args.tls_port,
-                timeout=30
-            )
-        else:
-            logger.error('Unknown connection type. Use ssh or tls.')
-            exit(1)
         try:
+            if args.connection.lower() == 'ssh':
+                if args.user is None:
+                    logger.error('User for ssh on OpenVAS server is not set.')
+                    exit(1)
+                self.conn = SSHConnection(
+                    hostname=args.host,
+                    username=args.user,
+                    password=args.ssh_pass,
+                    port=args.ssh_port,
+                    timeout=30
+                )
+            elif args.connection.lower() == 'tls':
+                if args.cert_file is None or args.ca_file is None or args.private_key is None:
+                    logger.error('Parameters for tls-connection on OpenVAS server is not set.')
+                    exit(1)
+                self.conn = TLSConnection(
+                    hostname=args.host,
+                    certfile=args.cert_file,
+                    cafile=args.ca_file,
+                    keyfile=args.private_key,
+                    password=args.pass_key,
+                    port=args.tls_port,
+                    timeout=30
+                )
+            else:
+                logger.error('Unknown connection type. Use ssh or tls.')
+                exit(1)
             transform = EtreeTransform()
             with Gmp(self.conn, transform=transform) as self.gmp:
                 self.gmp.authenticate(args.login, args.openvas_pass)
-        except GvmError as e:
+        except (GvmError, socket.error) as e:
             logger.error(f'Connection is failed. Check if address is correct! Exporter will try to connect after '
                          f'{10*self.args.to_interval}s.')
             logger.debug(f'Details: {e}')
